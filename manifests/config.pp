@@ -74,6 +74,14 @@ class nginx::config(
     ensure => absent,
   }
 
+  file { "${nginx::params::nx_conf_dir}/conf.d/default.conf":
+    ensure => absent,
+  }
+
+  file { "${nginx::params::nx_conf_dir}/conf.d/example_ssl.conf":
+    ensure => absent,
+  }
+
   file { "${nginx::params::nx_conf_dir}/nginx.conf":
     ensure  => file,
     content => template('nginx/conf.d/nginx.conf.erb'),
