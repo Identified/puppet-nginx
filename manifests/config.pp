@@ -85,7 +85,7 @@ class nginx::config(
 
   file { "${nginx::params::nx_conf_dir}/mime.types":
     ensure  => file,
-    content => template('nginx/conf.d/mime.types.erb'),
+    content => template('nginx/mime.types.erb'),
   }
 
   file { "${nginx::params::nx_conf_dir}/conf.d/proxy.conf":
