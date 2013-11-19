@@ -39,6 +39,10 @@ class nginx::config(
     ensure => directory,
   }
 
+  file { $nginx::params::nx_logdir:
+    ensure => directory,
+  }
+
   file { "${nginx::params::nx_conf_dir}/conf.d":
     ensure => directory,
   }
