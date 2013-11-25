@@ -386,11 +386,11 @@ describe 'nginx::resource::location' do
         {
           :title => 'should contain ordered config directives',
           :attr  => 'location_custom_cfg',
-          :value => { 'test1' => 'test value 1', 'test2' => 'test value 2', 'allow' => 'test value 3' },
+          :value => [ 'test1 test value 1', 'test2 test value 2', 'allow test value 3' ],
           :match => [
-            '    allow test value 3;',
             '    test1 test value 1;',
             '    test2 test value 2;',
+            '    allow test value 3;',
           ],
         },
       ].each do |param|
