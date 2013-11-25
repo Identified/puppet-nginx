@@ -58,6 +58,7 @@ class nginx::params {
   $nx_proxy_read_timeout      = '90'
   $nx_proxy_buffers           = '32 4k'
   $nx_proxy_http_version      = '1.0'
+  $nx_proxy_buffer_size       = '8k'
 
   $nx_logdir = $::kernel ? {
     /(?i-mx:linux)/ => '/var/log/nginx',
@@ -67,9 +68,18 @@ class nginx::params {
     /(?i-mx:linux)/  => '/var/run/nginx.pid',
   }
 
-  $nx_daemon_user = $::operatingsystem ? {
-    /(?i-mx:debian|ubuntu)/                                                    => 'www-data',
-    /(?i-mx:fedora|rhel|redhat|centos|scientific|suse|opensuse|amazon|gentoo)/ => 'nginx',
+  if $::osfamily {
+    $nx_daemon_user = $::osfamily ? {
+      /(?i-mx:redhat|suse|gentoo|linux)/ => 'nginx',
+      /(?i-mx:debian)/                   => 'www-data',
+    }
+  } else {
+    warning('$::osfamily not defined. Support for $::operatingsystem is deprecated')
+    warning("Please upgrade from factor ${::facterversion} to >= 1.7.2")
+    $nx_daemon_user = $::operatingsystem ? {
+      /(?i-mx:debian|ubuntu)/                                                                => 'www-data',
+      /(?i-mx:fedora|rhel|redhat|centos|scientific|suse|opensuse|amazon|gentoo|oraclelinux)/ => 'nginx',
+    }
   }
 
   # Service restart after Nginx 0.7.53 could also be just
@@ -84,4 +94,12 @@ class nginx::params {
 
   $nx_http_cfg_append = false
 
+  $nx_nginx_error_log = "${nx_logdir}/error.log"
+  $nx_http_access_log = "${nx_logdir}/access.log"
+
+  # package name depends on distribution, e.g. for Debian nginx-full | nginx-light
+  $package_name   = 'nginx'
+  $package_ensure = 'present'
+  $package_source = 'nginx'
+  $manage_repo    = true
 }
